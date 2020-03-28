@@ -35,13 +35,13 @@ def generate_client(t, lmda):
 
 class HappyComputing:
     def __init__(self, uptime, vendors, tec, stec, arrival ,vendor_lambda, tec_lambda, stec_lambda, infinite=None):
-        self.T = uptime
-        self.n_vendors = vendors
-        self.n_tec = tec
-        self.n_stec = stec
-        self.reset()
-        self.arrival = arrival
-        self.infinite = 2*self.T if infinite is None else infinite
+        self.T = uptime #Shop working time
+        self.n_vendors = vendors #Number of vendors
+        self.n_tec = tec # tecs number
+        self.n_stec = stec # special tecs number
+        self.reset() 
+        self.arrival = arrival # lamda of arrival time
+        self.infinite = 2*self.T if infinite is None else infinite # Considerable large number to avoid errors
 
     def reset(self):
         self.SS = [0] * (self.n_vendors + 1) # Sistem state [0] number of costumers in the system, [i] i>0 costumer with vendor i
