@@ -43,6 +43,9 @@ def generate_vendor_time(miu=10, ro=5):
 def generate_tec_time(lmbda=1/20):
     return exponential(lmbda)
 
+def generate_stec_time(lmbda=1/15):
+    return exponential(lmbda)
+
 
 class Client:
     def __init__(self, number = -1, arrival = MAX):
@@ -117,13 +120,16 @@ class HappyComputing:
         self._simulate()
 
     def _simulate(self):
-        while(len(self.arrival_list) + len(self.tec_list) + len(self.stec_list)):
+        while(True):
             arriv = self.SS[0]
             m_vendors = min(self.SS[1:self.vendor_number + 1])
             m_tec = min(self.SS[self.vendor_number + 1: self.vendor_number + self.tec_number + 1])
             m_stec = min(self.SS[self.vendor_number + self.tec_number + 1:])
 
             m_min = min(self.SS)
+
+            if m_min == Client():
+                break
 
             if arriv == m_min:
                 print(f'Llega el cliente {arriv.id}')
@@ -133,7 +139,7 @@ class HappyComputing:
                 arriv.vendor_end_time = self.system_time + generate_vendor_time()
                 self.SS[choice] = arriv
 
-                self.SS[0] = self.arrival_list.pop(0)
+                self.SS[0] = self.arrival_list.pop(0) if len(self.arrival_list) else Client()
 
             elif m_vendors == m_min:
                 print(f'{self.system_time}: el cliente {m_vendors.id} de tipo {m_vendors.type} termina de ser atendido por un vendedor')
@@ -149,7 +155,7 @@ class HappyComputing:
 
                     if choice:
                         m_vendors.tec_id = choice
-                        m_vendors.tec_end_time = self.system_time + generate_tec_time()
+                        m_vendors.tec_end_time = self.system_time + generate_tec_time() if m_vendors.type != 3 else generate_stec_time()
                         self.SS[choice] = m_vendors
                     else:
                         if attender_type[m_vendors.type] == 'tec':
@@ -202,6 +208,7 @@ class HappyComputing:
                         nextone.stec_waiting_time = self.system_time - nextone.vendor_end_time
                     else:
                         nextone.tec_waiting_time = self.system_time - nextone.vendor_end_time
+                    nextone.tec_end_time = self.system_time + generate_stec_time() if nextone.type == 3 else generate_tec_time()
                     self.SS[freeone] = nextone
 
             else:
