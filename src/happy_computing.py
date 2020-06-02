@@ -72,6 +72,12 @@ class Client:
     def __le__(self, other):
         return not self.__gt__(other)
 
+    def __str__(self):
+        return f"{self.id} {self.arrival} {self.vendor_waiting_time} {self.tec_waiting_time or self.stec_waiting_time} {self.type}"
+
+    def __repr__(self):
+        return self.__str__()
+
 
 
 class HappyComputing:
@@ -99,10 +105,14 @@ class HappyComputing:
         i = 1
         while(t < self.T):
             t = generate_client(t)
+            if t > self.T:
+                break
             self.arrival_list.append(Client(i, t))
             i+=1
         
-        self.SS[0].append(self.arrival_list.pop(0))
+        print(self.arrival_list)
+
+        self.SS[0] = self.arrival_list.pop(0)
 
         self._simulate()
 
@@ -116,6 +126,7 @@ class HappyComputing:
             m_min = min(self.SS)
 
             if arriv == m_min:
+                print(f'Llega el cliente {arriv.id}')
                 self.system_time = arriv.arrival
                 choice = self.find_free_attender('vendor')
                 arriv.vendor_id = choice
@@ -125,9 +136,11 @@ class HappyComputing:
                 self.SS[0] = self.arrival_list.pop(0)
 
             elif m_vendors == m_min:
+                print(f'{self.system_time}: el cliente {m_vendors.id} de tipo {m_vendors.type} termina de ser atendido por un vendedor')
                 self.system_time = m_vendors.vendor_end_time
 
                 if m_vendors.type == 4:
+                    print(f'{self.system_time}: El cliente {m_vendors.id} de tipo 4 deja es establecimiento')
                     m_vendors.finish_time = self.system_time
                     #compra de equipo
                     self.visitors_list.append(m_vendors)
@@ -137,7 +150,7 @@ class HappyComputing:
                     if choice:
                         m_vendors.tec_id = choice
                         m_vendors.tec_end_time = self.system_time + generate_tec_time()
-                        self.SS[m_vendors] = m_vendors
+                        self.SS[choice] = m_vendors
                     else:
                         if attender_type[m_vendors.type] == 'tec':
                             # reparacion tipo 1 o 2
@@ -147,6 +160,7 @@ class HappyComputing:
                             self.stec_list.append(m_vendors)
 
                 freeone = m_vendors.vendor_id
+                self.SS[freeone] = Client()
 
                 if len(self.vendor_list):
                     newone = self.vendor_list.pop(0)
@@ -155,10 +169,12 @@ class HappyComputing:
                 
                 
             elif m_tec == m_min:
+                print(f'{self.system_time}: el cliente {m_tec.id} de tipo {m_tec.type} termina de ser atendido por un Técnico')
                 self.system_time = m_tec.tec_end_time
                 m_tec.finish_time = self.system_time
 
                 freeone = m_tec.tec_id
+                self.SS[freeone] = Client()
 
                 self.visitors_list.append(m_tec)
 
@@ -170,17 +186,22 @@ class HappyComputing:
 
 
             elif m_stec == m_min:
+                print(f'{self.system_time}: el cliente {m_stec.id} de tipo {m_stec.type} termina de ser atendido por un Técnico Especializado')
                 self.system_time = m_stec.tec_end_time
                 m_stec.finish_time = self.system_time
 
                 freeone = m_stec.tec_id
+                self.SS[freeone] = Client()
 
                 self.visitors_list.append(m_stec)
 
                 if len(self.stec_list) or len(self.tec_list):
                     nextone = self.stec_list.pop(0) if len(self.stec_list) else self.tec_list.pop(0)
                     nextone.tec_id = freeone
-                    nextone.tec_waiting_time = self.system_time - nextone.vendor_end_time
+                    if nextone.type == 3:
+                        nextone.stec_waiting_time = self.system_time - nextone.vendor_end_time
+                    else:
+                        nextone.tec_waiting_time = self.system_time - nextone.vendor_end_time
                     self.SS[freeone] = nextone
 
             else:
