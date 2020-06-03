@@ -84,7 +84,7 @@ class Client:
 
 
 class HappyComputing:
-    def __init__(self, uptime=480, vendors=2, tec=3, stec=1, arrival_lambda = 1/20 ,vendor_lambda = (5,2), tec_lambda = 1/20, stec_lambda = 1/15, infinite=None):
+    def __init__(self, uptime=480, vendors=2, tec=3, stec=1, arrival_lambda = 1/20 ,vendor_lambda = (5,2), tec_lambda = 1/20, stec_lambda = 1/15, infinite=None, logs=False):
         self.arrival_list = []
         self.vendor_list = []
         self.tec_list = []
@@ -94,6 +94,7 @@ class HappyComputing:
         self.tec_number = tec
         self.stec_number = stec
         self.system_time = 0
+        self.logs = logs
 
         self.T = uptime
         self.MAX = 2*self.T if infinite is None else infinite
@@ -103,6 +104,11 @@ class HappyComputing:
 
     def simulate(self):
         self.SS = [Client()]*(self.vendor_number + self.tec_number + self.stec_number + 1)
+        self.arrival_list = []
+        self.vendor_list = []
+        self.tec_list = []
+        self.stec_list = []
+        self.visitors_list = []
 
         t = 0
         i = 1
@@ -112,8 +118,8 @@ class HappyComputing:
                 break
             self.arrival_list.append(Client(i, t))
             i+=1
-        
-        print(self.arrival_list)
+        if(self.logs):
+            print(self.arrival_list)
 
         self.SS[0] = self.arrival_list.pop(0)
 
@@ -132,7 +138,8 @@ class HappyComputing:
                 break
 
             if arriv == m_min:
-                print(f'Llega el cliente {arriv.id}')
+                if(self.logs):
+                    print(f'Llega el cliente {arriv.id}')
                 self.system_time = arriv.arrival
                 choice = self.find_free_attender('vendor')
                 arriv.vendor_id = choice
@@ -142,11 +149,13 @@ class HappyComputing:
                 self.SS[0] = self.arrival_list.pop(0) if len(self.arrival_list) else Client()
 
             elif m_vendors == m_min:
-                print(f'{self.system_time}: el cliente {m_vendors.id} de tipo {m_vendors.type} termina de ser atendido por un vendedor')
+                if(self.logs):
+                    print(f'{self.system_time}: el cliente {m_vendors.id} de tipo {m_vendors.type} termina de ser atendido por un vendedor')
                 self.system_time = m_vendors.vendor_end_time
 
                 if m_vendors.type == 4:
-                    print(f'{self.system_time}: El cliente {m_vendors.id} de tipo 4 deja es establecimiento')
+                    if(self.logs):
+                        print(f'{self.system_time}: El cliente {m_vendors.id} de tipo 4 deja es establecimiento')
                     m_vendors.finish_time = self.system_time
                     #compra de equipo
                     self.visitors_list.append(m_vendors)
@@ -175,7 +184,8 @@ class HappyComputing:
                 
                 
             elif m_tec == m_min:
-                print(f'{self.system_time}: el cliente {m_tec.id} de tipo {m_tec.type} termina de ser atendido por un Técnico')
+                if(self.logs):
+                    print(f'{self.system_time}: el cliente {m_tec.id} de tipo {m_tec.type} termina de ser atendido por un Técnico')
                 self.system_time = m_tec.tec_end_time
                 m_tec.finish_time = self.system_time
 
@@ -192,7 +202,8 @@ class HappyComputing:
 
 
             elif m_stec == m_min:
-                print(f'{self.system_time}: el cliente {m_stec.id} de tipo {m_stec.type} termina de ser atendido por un Técnico Especializado')
+                if(self.logs):
+                    print(f'{self.system_time}: el cliente {m_stec.id} de tipo {m_stec.type} termina de ser atendido por un Técnico Especializado')
                 self.system_time = m_stec.tec_end_time
                 m_stec.finish_time = self.system_time
 
@@ -212,7 +223,8 @@ class HappyComputing:
                     self.SS[freeone] = nextone
 
             else:
-                print("anomalous exit")
+                if(self.logs):
+                    print("anomalous exit")
                 break
     
     def find_free_attender(self, a_type):
