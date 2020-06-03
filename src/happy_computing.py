@@ -139,12 +139,15 @@ class HappyComputing:
 
             if arriv == m_min:
                 if(self.logs):
-                    print(f'Llega el cliente {arriv.id}')
+                    print(f'{arriv.arrival}: Llega el cliente {arriv.id}')
                 self.system_time = arriv.arrival
                 choice = self.find_free_attender('vendor')
-                arriv.vendor_id = choice
-                arriv.vendor_end_time = self.system_time + generate_vendor_time()
-                self.SS[choice] = arriv
+                if choice:
+                    arriv.vendor_id = choice
+                    arriv.vendor_end_time = self.system_time + generate_vendor_time()
+                    self.SS[choice] = arriv
+                else:
+                    self.vendor_list.append(arriv)
 
                 self.SS[0] = self.arrival_list.pop(0) if len(self.arrival_list) else Client()
 
@@ -164,7 +167,7 @@ class HappyComputing:
 
                     if choice:
                         m_vendors.tec_id = choice
-                        m_vendors.tec_end_time = self.system_time + generate_tec_time() if m_vendors.type != 3 else generate_stec_time()
+                        m_vendors.tec_end_time = self.system_time + (generate_tec_time() if m_vendors.type != 3 else generate_stec_time())
                         self.SS[choice] = m_vendors
                     else:
                         if attender_type[m_vendors.type] == 'tec':
@@ -180,6 +183,8 @@ class HappyComputing:
                 if len(self.vendor_list):
                     newone = self.vendor_list.pop(0)
                     newone.vendor_waiting_time = self.system_time - newone.arrival
+                    newone.vendor_id = freeone
+                    newone.vendor_end_time = self.system_time + generate_vendor_time()
                     self.SS[freeone] = newone
                 
                 
@@ -198,6 +203,7 @@ class HappyComputing:
                     nextone = self.tec_list.pop(0)
                     nextone.tec_id = freeone
                     nextone.tec_waiting_time = self.system_time - nextone.vendor_end_time
+                    nextone.tec_end_time = self.system_time + generate_tec_time()
                     self.SS[freeone] = nextone
 
 
@@ -219,7 +225,7 @@ class HappyComputing:
                         nextone.stec_waiting_time = self.system_time - nextone.vendor_end_time
                     else:
                         nextone.tec_waiting_time = self.system_time - nextone.vendor_end_time
-                    nextone.tec_end_time = self.system_time + generate_stec_time() if nextone.type == 3 else generate_tec_time()
+                    nextone.tec_end_time = self.system_time + (generate_stec_time() if nextone.type == 3 else generate_tec_time())
                     self.SS[freeone] = nextone
 
             else:
