@@ -24,8 +24,8 @@ Se conoce que los clientes arriban al local con un intervalo de tiempo que
 distribuye poisson con lambda = 20 minuts y que el tipo de servicios que requieren
 pueden ser descrito mediante la tabla de probabilidades:
 
-Tipo de Servicio Probabilidad
-
+| Servicio | Probabilidad |
+| :---: | :---: |
 | 1 | 0.45 |
 | 2 | 0.25 |
 | 3 | 0.1 |
