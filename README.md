@@ -3,12 +3,14 @@
 A Discrete Event Simulation Project
 
 Happy Computing es un taller de reparaciones electrónicas se realizan las
-siguientes actividades (el precio de cada servicio se muestra entre paréntesis):
+siguientes actividades :
 
-1. Reparación por garantía (Gratis)
-2. Reparación fuera de garantía ($350)
-3. Cambio de equipo ($500)
-4. Venta de equipos reparados ($750)
+| Servicio | Descripción del Servicio | Precio |
+| :---: | :---: | :---: |
+| 1 | Reparación por garantía | Gratis |
+| 2 | Reparación fuera de garantía | $350 |
+| 3 | Cambio de equipo | $500 |
+| 4 | Venta de equipos reparados | $750 |
 
 Se conoce además que el taller cuenta con 3 tipos de empleados: Vendedor,
 Técnico y Técnico Especializado.
@@ -21,10 +23,10 @@ al cliente están ocupados, entonces se establece una cola para sus servicios. U
 técnico especializado sólo realizaría Reparaciones si no hay ningún cliente que
 desee un cambio de equipo en la cola.
 Se conoce que los clientes arriban al local con un intervalo de tiempo que
-distribuye poisson con lambda = 20 minuts y que el tipo de servicios que requieren
+distribuye poisson con lambda = 20 minutos y que el tipo de servicio que requieren
 pueden ser descrito mediante la tabla de probabilidades:
 
-| Servicio | Probabilidad |
+| Servicio | Probabilidad de solicitar el servicio|
 | :---: | :---: |
 | 1 | 0.45 |
 | 2 | 0.25 |
@@ -32,9 +34,9 @@ pueden ser descrito mediante la tabla de probabilidades:
 | 4 | 0.2 |
 
 Además se conoce que un técnico tarda un tiempo que distribuye exponecial
-con lambsa = 20 minutos, en realizar una Reparación Cualquiera. Un técnico especializdo
+con lambda = 20 minutos, en realizar una Reparación Cualquiera. Un técnico especializdo
 tarda un tiempo que distribuye exponencial con lmabda = 15 minutos para
 realizar un cambio de equipos y la vendedora puede atender cualquier servicio
 en un tiempo que distribuye normal (N(5 min, 2mins)).
 El dueño del lugar desea realizar una simulación de la ganancia que tendrá en
-una jornada laboral si tuviera 2 vendedores, 3 tecnicos y 1 tecnico especializado.
+una jornada laboral si tuviera 2 vendedores, 3 técnicos y 1 técnico especializado.
