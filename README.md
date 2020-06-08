@@ -40,3 +40,13 @@ realizar un cambio de equipos y la vendedora puede atender cualquier servicio
 en un tiempo que distribuye normal (N(5 min, 2mins)).
 El dueño del lugar desea realizar una simulación de la ganancia que tendrá en
 una jornada laboral si tuviera 2 vendedores, 3 técnicos y 1 técnico especializado.
+
+## Estructura del proyecto
+
+El proyecto se encuetra estructurado en 3 carpetas:
+
+* `/code` donde se encuentra el código empleado para la solución.
+
+* `/documents` donde se encuentra la orientación y el informe de los resultados.
+
+* `/examples` con datos resultantes de varias corridas del algoritmo.
