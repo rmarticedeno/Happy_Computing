@@ -1,7 +1,7 @@
 import pandas as pd
 from happy_computing import HappyComputing
 
-experiments = 1000
+experiments = 10000
 
 results = {
     'Client Count': [0]*experiments,
@@ -39,7 +39,7 @@ profit = {
 
 index = [ i for i in range(1,experiments+1)]
 
-workshop = HappyComputing(logs=False)
+workshop = HappyComputing(logs=False,tec=2,stec=2)
 
 for i in range(experiments):
     workshop.simulate()
@@ -72,4 +72,4 @@ data = pd.DataFrame(results)
 
 summary = data.describe()
 
-summary.to_csv('summary.csv')
+summary.to_csv('summary2.csv')
